@@ -1,0 +1,34 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node (required by some Pages helpers)
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: "./"
+
+  deploy-pages:
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v1
